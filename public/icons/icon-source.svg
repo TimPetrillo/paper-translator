@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Paper Translator icon">
+  <defs>
+    <linearGradient id="background" x1="18" y1="10" x2="112" y2="122" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0F604B"/>
+      <stop offset="1" stop-color="#34A27D"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#background)"/>
+  <path d="M34 21h42l19 19v65a7 7 0 0 1-7 7H34a7 7 0 0 1-7-7V28a7 7 0 0 1 7-7Z" fill="#fff"/>
+  <path d="M76 21v16a5 5 0 0 0 5 5h14" fill="#D7F1E8"/>
+  <path d="M42 54h38M42 66h38M42 78h24" stroke="#147258" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="83" cy="88" r="24" fill="#163E34" stroke="#fff" stroke-width="5"/>
+  <path d="M72 79h22M83 74v5M77 79c1 8 6 14 15 18M91 79c-2 9-8 15-17 19" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

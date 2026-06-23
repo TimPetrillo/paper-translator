@@ -1,0 +1,125 @@
+body {
+  min-width: 0;
+  min-height: 100vh;
+  background: #eef5f2;
+}
+.options-shell {
+  width: min(820px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 42px 0 72px;
+}
+.options-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 24px;
+}
+.options-logo {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 17px;
+  color: #fff;
+  background: linear-gradient(145deg, #116a54, #36a47f);
+  font-size: 27px;
+  box-shadow: 0 8px 24px rgb(17 106 84 / 20%);
+}
+.options-header h1 {
+  margin: 0;
+  font-size: 25px;
+}
+.options-header p {
+  margin: 5px 0 0;
+  color: #65746f;
+}
+.panel {
+  margin-top: 16px;
+  padding: 25px;
+  border: 1px solid #d3dfda;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 8px 30px rgb(42 73 62 / 5%);
+}
+.panel h2 {
+  margin: 0 0 4px;
+  font-size: 17px;
+}
+.panel p {
+  margin: 0 0 19px;
+  color: #697872;
+  line-height: 1.65;
+}
+.panel-title {
+  margin-bottom: 20px;
+}
+.options-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+.options-actions button {
+  min-height: 40px;
+  border: 1px solid #ccd9d4;
+  border-radius: 8px;
+  padding: 0 17px;
+  color: #324b43;
+  background: #f4f8f6;
+  cursor: pointer;
+  font-weight: 650;
+}
+.options-actions .primary {
+  border-color: #147258;
+  color: #fff;
+  background: #147258;
+}
+.options-actions .danger {
+  margin-left: auto;
+  color: #9a4038;
+}
+.options-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.feedback {
+  margin-top: 15px;
+  border-radius: 8px;
+  padding: 11px 13px;
+}
+.feedback.success {
+  color: #165d49;
+  background: #e5f4ee;
+}
+.feedback.error {
+  color: #9c3029;
+  background: #fcebe9;
+}
+.privacy-panel ul {
+  margin: 14px 0 0;
+  padding-left: 21px;
+  color: #53625d;
+  line-height: 1.9;
+}
+.tips-panel code,
+.privacy-panel code {
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: #edf3f1;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.9em;
+}
+@media (max-width: 600px) {
+  .options-shell {
+    width: min(100% - 20px, 820px);
+    padding-top: 24px;
+  }
+  .panel {
+    padding: 18px;
+  }
+  .options-actions {
+    flex-wrap: wrap;
+  }
+  .options-actions .danger {
+    margin-left: 0;
+  }
+}

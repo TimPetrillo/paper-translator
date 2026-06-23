@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="520" viewBox="0 0 920 520" role="img" aria-labelledby="title desc">
+  <title id="title">Paper Translator Popup 截图占位图</title>
+  <desc id="desc">等待替换为真实扩展 Popup 截图。</desc>
+  <rect width="920" height="520" rx="24" fill="#eef5f2"/>
+  <rect x="250" y="28" width="420" height="464" rx="18" fill="#fff" stroke="#cbdad4" stroke-width="2"/>
+  <rect x="275" y="54" width="48" height="48" rx="14" fill="#18765c"/>
+  <text x="299" y="86" text-anchor="middle" font-size="24" fill="#fff" font-family="sans-serif">译</text>
+  <text x="339" y="76" font-size="20" font-weight="700" fill="#17251f" font-family="sans-serif">Paper Translator</text>
+  <text x="339" y="96" font-size="12" fill="#6b7a74" font-family="sans-serif">Popup screenshot placeholder</text>
+  <g fill="#f3f7f5" stroke="#d2ded9">
+    <rect x="275" y="128" width="370" height="42" rx="8"/><rect x="275" y="184" width="370" height="42" rx="8"/>
+    <rect x="275" y="240" width="178" height="42" rx="8"/><rect x="467" y="240" width="178" height="42" rx="8"/>
+    <rect x="275" y="304" width="370" height="58" rx="10"/>
+  </g>
+  <rect x="275" y="382" width="235" height="44" rx="9" fill="#18765c"/>
+  <text x="392" y="410" text-anchor="middle" font-size="14" font-weight="700" fill="#fff" font-family="sans-serif">翻译当前页面</text>
+  <rect x="522" y="382" width="123" height="44" rx="9" fill="#f6dfdc"/>
+  <text x="584" y="410" text-anchor="middle" font-size="14" fill="#9d3b32" font-family="sans-serif">停止翻译</text>
+  <text x="460" y="468" text-anchor="middle" font-size="13" fill="#73827c" font-family="sans-serif">Replace this SVG with a real screenshot before release</text>
+</svg>

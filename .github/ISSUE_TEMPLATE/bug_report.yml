@@ -1,0 +1,52 @@
+name: Bug report
+description: 报告可复现的问题或站点兼容性缺陷
+title: '[Bug]: '
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: 请先移除 API Key、论文私密内容和其他敏感信息。
+  - type: input
+    id: version
+    attributes:
+      label: 扩展版本
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: browser
+    attributes:
+      label: 浏览器
+      options: [Chrome, Edge, Chromium 其他版本]
+    validations:
+      required: true
+  - type: input
+    id: page
+    attributes:
+      label: 页面 URL 或站点
+      description: 私有页面可只填写域名并提供脱敏 DOM。
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期结果
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际结果与脱敏日志
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 提交前确认
+      options:
+        - label: 我已确认内容中没有 API Key 或敏感论文数据。
+          required: true

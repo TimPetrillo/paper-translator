@@ -1,0 +1,226 @@
+:root {
+  color: #15221e;
+  background: #f4f8f6;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  font-synthesis: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-width: 410px;
+}
+button,
+input,
+select {
+  font: inherit;
+}
+
+.popup-shell {
+  width: 410px;
+  padding: 18px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 16px;
+}
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  color: #fff;
+  background: linear-gradient(145deg, #116a54, #36a47f);
+  font-size: 22px;
+  box-shadow: 0 6px 18px rgb(17 106 84 / 22%);
+}
+.brand h1 {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: -0.2px;
+}
+.brand p {
+  margin: 2px 0 0;
+  color: #66756f;
+  font-size: 12px;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.settings-grid--compact {
+  gap: 9px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.field--wide {
+  grid-column: 1 / -1;
+}
+.field > span {
+  color: #43524d;
+  font-size: 12px;
+  font-weight: 650;
+}
+.field small {
+  color: #788781;
+  font-size: 11px;
+}
+.field input,
+.field select {
+  width: 100%;
+  height: 37px;
+  border: 1px solid #cfdbd6;
+  border-radius: 8px;
+  padding: 0 10px;
+  color: #17251f;
+  background: #fff;
+  outline: none;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+.field input:focus,
+.field select:focus {
+  border-color: #27876a;
+  box-shadow: 0 0 0 3px rgb(39 135 106 / 12%);
+}
+
+.status-card {
+  margin-top: 13px;
+  padding: 11px;
+  border: 1px solid #d5dfdb;
+  border-radius: 10px;
+  background: #fff;
+}
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 12px;
+}
+.status-row strong {
+  font-weight: 650;
+}
+.status-row span {
+  color: #23745d;
+  font-variant-numeric: tabular-nums;
+}
+.progress-track {
+  height: 5px;
+  margin-top: 8px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: #e6eeeb;
+}
+.progress-value {
+  height: 100%;
+  border-radius: inherit;
+  background: #279574;
+  transition: width 0.2s ease;
+}
+.status-card small {
+  display: block;
+  margin-top: 6px;
+  color: #916518;
+}
+.status-card--error {
+  border-color: #efc8c4;
+  background: #fff8f7;
+}
+
+.notice {
+  margin-top: 10px;
+  border-radius: 8px;
+  padding: 9px 10px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.notice--success {
+  color: #165d49;
+  background: #e5f4ee;
+}
+.notice--error {
+  color: #9c3029;
+  background: #fcebe9;
+}
+
+.primary-actions,
+.secondary-actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 11px;
+}
+.primary-actions {
+  grid-template-columns: 1.6fr 1fr;
+}
+.secondary-actions {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.button {
+  min-height: 38px;
+  border: 0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  font-weight: 650;
+  font-size: 12px;
+}
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+.button--primary {
+  color: #fff;
+  background: #147258;
+}
+.button--primary:hover:not(:disabled) {
+  background: #0f604a;
+}
+.button--danger {
+  color: #a2372f;
+  background: #f8dfdc;
+}
+.button--secondary {
+  color: #315149;
+  background: #e5eeeb;
+}
+.button--ghost {
+  color: #55635e;
+  border: 1px solid #d3deda;
+  background: transparent;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 13px;
+  color: #7a8883;
+  font-size: 11px;
+}
+.link-button {
+  border: 0;
+  padding: 2px;
+  color: #176f57;
+  background: transparent;
+  cursor: pointer;
+  font-size: 11px;
+}

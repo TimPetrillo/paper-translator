@@ -1,0 +1,24 @@
+.paper-translator-translation {
+  color: #0b6b55 !important;
+  font-family: inherit !important;
+  font-style: normal !important;
+  line-height: inherit !important;
+  text-decoration: none !important;
+}
+
+.paper-translator-translation--inline::before {
+  content: '〔';
+  color: #7a8b85;
+}
+
+.paper-translator-translation--inline::after {
+  content: '〕';
+  color: #7a8b85;
+}
+
+.paper-translator-translation--block {
+  display: block !important;
+  margin-top: 0.38em !important;
+  padding-left: 0.75em !important;
+  border-left: 2px solid #3fb68e !important;
+}
