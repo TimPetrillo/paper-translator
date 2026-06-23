@@ -6,19 +6,23 @@
   text-decoration: none !important;
 }
 
-.paper-translator-translation--inline::before {
-  content: '〔';
-  color: #7a8b85;
-}
-
-.paper-translator-translation--inline::after {
-  content: '〕';
-  color: #7a8b85;
-}
-
 .paper-translator-translation--block {
   display: block !important;
-  margin-top: 0.38em !important;
+  margin-top: 0.42em !important;
+  margin-bottom: 0.55em !important;
   padding-left: 0.75em !important;
   border-left: 2px solid #3fb68e !important;
+  font-size: var(--paper-translator-font-size, inherit) !important;
+  font-weight: var(--paper-translator-font-weight, inherit) !important;
+  text-align: left !important;
+  text-justify: auto !important;
+  word-spacing: normal !important;
+  letter-spacing: normal !important;
+  overflow-wrap: anywhere !important;
+  white-space: normal !important;
+}
+
+.paper-translator-translation--block a {
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
 }

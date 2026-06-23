@@ -1,4 +1,4 @@
-import type { DisplayMode } from '../types/config';
+import type { ProtectedInlineSegment } from './extractor';
 
 const TRANSLATION_ATTRIBUTE = 'data-paper-translator';
 
@@ -8,37 +8,61 @@ function preserveOuterWhitespace(original: string, translated: string): string {
   return `${leading}${translated}${trailing}`;
 }
 
-function shouldDisplayAsBlock(node: Text): boolean {
-  const parent = node.parentElement;
-  if (!parent) return false;
-  const significantChildren = Array.from(parent.childNodes).filter(
-    (child) => child.nodeType !== Node.TEXT_NODE || Boolean(child.textContent?.trim()),
-  );
-  if (significantChildren.length !== 1) return false;
-  const display = getComputedStyle(parent).display;
-  return ['block', 'list-item', 'table-cell', 'flex', 'grid'].includes(display);
-}
-
 export class DomTranslationRenderer {
   private readonly originals = new Map<Text, string>();
 
-  public apply(node: Text, translated: string, mode: DisplayMode): void {
+  public applyReplacement(node: Text, translated: string): void {
     if (!node.isConnected || !translated.trim()) return;
     if (!this.originals.has(node)) this.originals.set(node, node.data);
+    node.data = preserveOuterWhitespace(this.originals.get(node) ?? node.data, translated);
+  }
 
-    if (mode === 'replace') {
-      node.data = preserveOuterWhitespace(this.originals.get(node) ?? node.data, translated);
-      return;
+  public applyBilingualBlock(
+    element: HTMLElement,
+    translated: string,
+    protectedSegments: readonly ProtectedInlineSegment[],
+  ): void {
+    if (!element.isConnected || !translated.trim()) return;
+
+    const shouldAppendInside = ['LI', 'TD', 'TH'].includes(element.tagName);
+    const translation = document.createElement(shouldAppendInside ? 'span' : 'div');
+    const sourceStyle = getComputedStyle(element);
+    translation.setAttribute(TRANSLATION_ATTRIBUTE, 'translation');
+    translation.setAttribute('lang', 'zh-CN');
+    translation.className = 'paper-translator-translation paper-translator-translation--block';
+    translation.style.setProperty('--paper-translator-font-size', sourceStyle.fontSize);
+    translation.style.setProperty('--paper-translator-font-weight', sourceStyle.fontWeight);
+    translation.append(this.renderProtectedContent(translated, protectedSegments));
+
+    if (shouldAppendInside) {
+      element.append(translation);
+    } else {
+      element.insertAdjacentElement('afterend', translation);
     }
+  }
 
-    const span = document.createElement('span');
-    span.setAttribute(TRANSLATION_ATTRIBUTE, 'translation');
-    span.setAttribute('lang', 'zh-CN');
-    span.className = shouldDisplayAsBlock(node)
-      ? 'paper-translator-translation paper-translator-translation--block'
-      : 'paper-translator-translation paper-translator-translation--inline';
-    span.textContent = translated;
-    node.parentNode?.insertBefore(span, node.nextSibling);
+  private renderProtectedContent(
+    translated: string,
+    protectedSegments: readonly ProtectedInlineSegment[],
+  ): DocumentFragment {
+    const fragment = document.createDocumentFragment();
+    const segmentMap = new Map(
+      protectedSegments.map((segment) => [segment.token, segment.element]),
+    );
+    for (const part of translated.split(/(⟦PT_\d+⟧)/gu)) {
+      const sourceElement = segmentMap.get(part);
+      if (!sourceElement) {
+        fragment.append(document.createTextNode(part));
+        continue;
+      }
+      const clone = sourceElement.cloneNode(true);
+      if (clone instanceof Element) {
+        clone.removeAttribute('id');
+        clone.querySelectorAll('[id]').forEach((descendant) => descendant.removeAttribute('id'));
+      }
+      fragment.append(clone);
+    }
+    return fragment;
   }
 
   public restore(): void {

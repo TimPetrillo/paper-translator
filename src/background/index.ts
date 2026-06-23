@@ -1,4 +1,4 @@
-import { OpenAICompatibleClient } from '../api/openaiCompatible';
+import { TranslationApiClient } from '../api/translationApi';
 import { getSettings, normalizeSettings } from '../storage/settings';
 import type { TranslationRunOptions } from '../types/config';
 import {
@@ -46,7 +46,7 @@ async function translateText(message: Extract<RuntimeMessage, { type: 'TRANSLATE
   const controller = registerController(message.taskId);
   try {
     const settings = await getSettings();
-    const client = new OpenAICompatibleClient(settings);
+    const client = new TranslationApiClient(settings);
     return success(await client.translate(message.text, message.mode, controller.signal));
   } catch (error) {
     return failure(error);
@@ -58,7 +58,7 @@ async function translateText(message: Extract<RuntimeMessage, { type: 'TRANSLATE
 async function testApi(message: Extract<RuntimeMessage, { type: 'TEST_API' }>) {
   const controller = new AbortController();
   try {
-    const client = new OpenAICompatibleClient(normalizeSettings(message.settings));
+    const client = new TranslationApiClient(normalizeSettings(message.settings));
     return success(await client.test(controller.signal));
   } catch (error) {
     return failure(error);

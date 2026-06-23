@@ -14,6 +14,10 @@ const EXCLUDED_SELECTOR = [
   '.MathJax_Display',
   '.katex',
   '.katex-display',
+  '.ltx_cite',
+  '.ltx_note_mark',
+  'cite',
+  'a.ltx_ref',
   '[data-mathml]',
   '[aria-hidden="true"]',
   '[hidden]',
@@ -33,13 +37,20 @@ const REFERENCE_SELECTOR = [
 
 const METADATA_SELECTOR = [
   '.authors',
+  '.author',
+  '.author-name',
+  '.ltx_authors',
+  '.ltx_creator.ltx_role_author',
+  '.ltx_personname',
+  '.ltx_author_notes',
+  '.ltx_contact',
   '.author-list',
   '.author-group',
   '.affiliations',
   '.affiliation',
   '.institutions',
   '.institution',
-  '[class*="Author"]',
+  '[class~="author"]',
   '[class*="author-name"]',
   '[class*="affiliation"]',
   '[rel="author"]',
@@ -55,18 +66,63 @@ const FIGURE_NUMBER =
 const EQUATION_NUMBER = /^(?:eq(?:uation)?\s*[.:]?\s*)?\(?\d+(?:\.\d+)*[A-Za-z]?\)?$/i;
 const LATEX_FORMULA =
   /^(?:\$\$?[\s\S]*\$\$?|\\\([\s\S]*\\\)|\\\[[\s\S]*\\\]|\\begin\{[^}]+\}[\s\S]*\\end\{[^}]+\})$/;
-const PERSON_NAME = /^(?:[A-Z][A-Za-z'’-]+(?:\s+|,\s*)){1,4}[A-Z][A-Za-z'’-]+\d*$/;
+const PERSON_NAME =
+  /^(?:(?:[A-Z][A-Za-z'’-]+|[A-Z]\.)(?:\s+|,\s*)){1,5}(?:[A-Z][A-Za-z'’-]+|[A-Z]\.)\d*$/;
 const INSTITUTION =
   /\b(?:university|institute|laboratory|laboratories|college|school of|department of|academy of|research center|research centre)\b/i;
 
 const SITE_ROOTS: Array<[RegExp, readonly string[]]> = [
-  [/arxiv\.org$/i, ['article.ltx_document', '.ltx_page_main', 'main']],
+  [/arxiv\.org$/i, ['.ltx_page_content', '.ltx_page_main', 'main']],
   [/ieee\.org$/i, ['article', '#article', '.document-main', 'main']],
   [/acm\.org$/i, ['.article__body', '#pb-page-content', 'article', 'main']],
   [/springer\.com$/i, ['article', '.c-article-body', 'main']],
   [/nature\.com$/i, ['.article__body', 'article', 'main']],
   [/sciencedirect\.com$/i, ['article', '#body', '.Body', 'main']],
 ];
+
+const BILINGUAL_BLOCK_SELECTOR = [
+  'p',
+  'li',
+  'blockquote',
+  'figcaption',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'dd',
+  'dt',
+  'td',
+  'th',
+  '.ltx_para',
+].join(',');
+
+const PROTECTED_INLINE_SELECTOR = [
+  'math',
+  'mjx-container',
+  '.MathJax',
+  '.MathJax_Display',
+  '.katex',
+  '.katex-display',
+  '.ltx_Math',
+  '.ltx_cite',
+  'cite',
+  'a.ltx_ref',
+].join(',');
+
+const OMITTED_INLINE_SELECTOR = '.ltx_note_mark';
+
+export interface ProtectedInlineSegment {
+  token: string;
+  element: Element;
+}
+
+export interface BilingualTextBlock {
+  element: HTMLElement;
+  text: string;
+  protectedSegments: ProtectedInlineSegment[];
+}
 
 function findContentRoot(): HTMLElement {
   const selectors = SITE_ROOTS.find(([host]) => host.test(location.hostname))?.[1] ?? [
@@ -133,4 +189,55 @@ export function extractVisibleEnglishTextNodes(): Text[] {
     current = walker.nextNode();
   }
   return nodes;
+}
+
+function findBlockElement(node: Text): HTMLElement | undefined {
+  const parent = node.parentElement;
+  if (!parent) return undefined;
+  const semanticBlock = parent.closest<HTMLElement>(BILINGUAL_BLOCK_SELECTOR);
+  if (semanticBlock) return semanticBlock;
+
+  let candidate: HTMLElement | null = parent;
+  while (candidate && candidate !== document.body) {
+    const display = getComputedStyle(candidate).display;
+    if (['block', 'list-item', 'table-cell'].includes(display)) return candidate;
+    candidate = candidate.parentElement;
+  }
+  return parent;
+}
+
+/** Groups arXiv's many inline text nodes into coherent paragraph-level translation units. */
+export function groupTextNodesIntoBilingualBlocks(nodes: readonly Text[]): BilingualTextBlock[] {
+  const uniqueElements = new Set<HTMLElement>();
+  for (const node of nodes) {
+    const element = findBlockElement(node);
+    if (element) uniqueElements.add(element);
+  }
+
+  return Array.from(uniqueElements)
+    .map(serializeBilingualBlock)
+    .filter(({ text }) => text.length >= 2 && /[A-Za-z]{2}/.test(text));
+}
+
+function serializeBilingualBlock(element: HTMLElement): BilingualTextBlock {
+  const protectedSegments: ProtectedInlineSegment[] = [];
+
+  function serialize(node: Node): string {
+    if (node instanceof Text) return node.data;
+    if (!(node instanceof Element)) return '';
+    if (node.matches(OMITTED_INLINE_SELECTOR)) return '';
+    if (node !== element && node.matches(PROTECTED_INLINE_SELECTOR)) {
+      const token = `⟦PT_${protectedSegments.length}⟧`;
+      protectedSegments.push({ token, element: node });
+      return ` ${token} `;
+    }
+    if (node.tagName === 'BR') return ' ';
+    return Array.from(node.childNodes, serialize).join('');
+  }
+
+  return {
+    element,
+    text: serialize(element).replace(/\s+/g, ' ').trim(),
+    protectedSegments,
+  };
 }

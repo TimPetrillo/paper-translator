@@ -17,7 +17,7 @@
 }
 body {
   margin: 0;
-  min-width: 410px;
+  min-width: 360px;
 }
 button,
 input,
@@ -26,7 +26,7 @@ select {
 }
 
 .popup-shell {
-  width: 410px;
+  width: 360px;
   padding: 18px;
 }
 .brand {
@@ -55,6 +55,60 @@ select {
   margin: 2px 0 0;
   color: #66756f;
   font-size: 12px;
+}
+
+.config-card {
+  padding: 12px;
+  border: 1px solid #d4e0db;
+  border-radius: 11px;
+  background: #fff;
+}
+.config-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 7px;
+  color: #43524d;
+  font-size: 12px;
+  font-weight: 650;
+}
+.config-badge {
+  border-radius: 99px;
+  padding: 3px 8px;
+  font-size: 10px;
+}
+.config-badge--ok {
+  color: #126047;
+  background: #daf1e8;
+}
+.config-badge--warn {
+  color: #93631d;
+  background: #f8ecd2;
+}
+.model-name {
+  display: block;
+  overflow: hidden;
+  color: #17251f;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.config-card p {
+  margin: 4px 0 10px;
+  color: #6c7a75;
+  font-size: 11px;
+  line-height: 1.45;
+}
+.settings-link {
+  width: 100%;
+  min-height: 34px;
+  border: 1px solid #cbdcd5;
+  border-radius: 8px;
+  color: #176f57;
+  background: #edf5f2;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 650;
 }
 
 .settings-grid {
@@ -162,17 +216,13 @@ select {
   background: #fcebe9;
 }
 
-.primary-actions,
-.secondary-actions {
+.primary-actions {
   display: grid;
   gap: 8px;
   margin-top: 11px;
 }
 .primary-actions {
   grid-template-columns: 1.6fr 1fr;
-}
-.secondary-actions {
-  grid-template-columns: 1fr 1fr 1fr;
 }
 .button {
   min-height: 38px;
@@ -208,19 +258,14 @@ select {
   background: transparent;
 }
 
-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 13px;
-  color: #7a8883;
-  font-size: 11px;
+.restore-button {
+  width: 100%;
+  margin-top: 8px;
 }
-.link-button {
-  border: 0;
-  padding: 2px;
-  color: #176f57;
-  background: transparent;
-  cursor: pointer;
+
+footer {
+  margin-top: 13px;
+  text-align: center;
+  color: #7a8883;
   font-size: 11px;
 }

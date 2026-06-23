@@ -38,15 +38,15 @@ export function App() {
         <div className="options-logo">译</div>
         <div>
           <h1>Paper Translator 设置</h1>
-          <p>连接任意 OpenAI Compatible Chat Completions API</p>
+          <p>连接 OpenAI、Anthropic、Gemini 与兼容 API</p>
         </div>
       </header>
 
       <section className="panel">
         <div className="panel-title">
           <div>
-            <h2>API 与翻译参数</h2>
-            <p>Base URL 示例：服务商文档给出的兼容接口版本路径。</p>
+            <h2>API 协议与翻译参数</h2>
+            <p>先选择接口协议，再填写 API 服务商提供的 Base URL、密钥与模型 ID。</p>
           </div>
         </div>
         <SettingsForm settings={settings} onChange={setSettings} />
@@ -107,9 +107,8 @@ export function App() {
       <section className="panel tips-panel">
         <h2>兼容性提示</h2>
         <p>
-          兼容端点需接受 <code>POST /chat/completions</code>、Bearer API Key、
-          <code>model</code> 与 <code>messages</code> 字段，并返回{' '}
-          <code>choices[0].message.content</code>。
+          插件会根据所选协议自动切换请求路径、鉴权 Header、请求体和响应解析。使用第三方聚合 API
+          时，请以该服务商提供的接口文档为准。
         </p>
       </section>
     </main>

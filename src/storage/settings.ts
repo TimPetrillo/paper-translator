@@ -8,6 +8,7 @@ function clampInteger(value: number, min: number, max: number): number {
 
 export function normalizeSettings(value: Partial<ExtensionSettings>): ExtensionSettings {
   return {
+    apiProtocol: value.apiProtocol ?? DEFAULT_SETTINGS.apiProtocol,
     apiKey: value.apiKey?.trim() ?? DEFAULT_SETTINGS.apiKey,
     baseUrl: value.baseUrl?.trim().replace(/\/+$/, '') ?? DEFAULT_SETTINGS.baseUrl,
     model: value.model?.trim() ?? DEFAULT_SETTINGS.model,

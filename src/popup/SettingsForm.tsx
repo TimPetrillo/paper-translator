@@ -1,8 +1,11 @@
 import type { ChangeEvent } from 'react';
 
 import {
+  API_PROTOCOL_LABELS,
+  API_PROTOCOL_PATH_HINTS,
   DISPLAY_LABELS,
   MODE_LABELS,
+  type ApiProtocol,
   type DisplayMode,
   type ExtensionSettings,
   type TranslationMode,
@@ -28,6 +31,21 @@ export function SettingsForm({ settings, onChange, compact = false }: SettingsFo
   return (
     <div className={`settings-grid${compact ? ' settings-grid--compact' : ''}`}>
       <label className="field field--wide">
+        <span>接口协议</span>
+        <select
+          value={settings.apiProtocol}
+          onChange={(event) => update('apiProtocol', event.target.value as ApiProtocol)}
+        >
+          {Object.entries(API_PROTOCOL_LABELS).map(([value, label]) => (
+            <option key={value} value={value}>
+              {label}
+            </option>
+          ))}
+        </select>
+        {!compact && <small>{API_PROTOCOL_PATH_HINTS[settings.apiProtocol]}</small>}
+      </label>
+
+      <label className="field field--wide">
         <span>API Key</span>
         <input
           type="password"
@@ -48,7 +66,7 @@ export function SettingsForm({ settings, onChange, compact = false }: SettingsFo
           placeholder="https://api.example.com/v1"
           spellCheck={false}
         />
-        {!compact && <small>填写到版本路径，插件会自动追加 /chat/completions</small>}
+        {!compact && <small>可填写协议根地址或完整请求地址，优先使用 HTTPS。</small>}
       </label>
 
       <label className="field field--wide">

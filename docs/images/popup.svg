@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="862" viewBox="0 0 720 862" role="img" aria-labelledby="title desc">
+  <title id="title">Paper Translator Popup</title>
+  <desc id="desc">Paper Translator 尚未配置 API 时的浏览器扩展弹窗界面。</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#173e34" flood-opacity=".13"/>
+    </filter>
+    <style>
+      .ui { font-family: Inter, "Segoe UI", Arial, sans-serif; }
+      .zh { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; }
+    </style>
+  </defs>
+
+  <rect width="720" height="862" fill="#f2f7f5"/>
+  <rect x="34" y="30" width="652" height="802" rx="18" fill="#f7faf8" filter="url(#shadow)"/>
+
+  <rect x="66" y="68" width="84" height="84" rx="24" fill="#16866b"/>
+  <text x="108" y="124" class="zh" font-size="45" text-anchor="middle" fill="#fff">译</text>
+  <text x="172" y="101" class="ui" font-size="31" font-weight="700" fill="#111c18">Paper Translator</text>
+  <text x="172" y="133" class="zh" font-size="20" fill="#52645d">论文翻译控制面板</text>
+
+  <rect x="66" y="184" width="588" height="224" rx="23" fill="#fff" stroke="#cbdcd5" stroke-width="2"/>
+  <text x="88" y="226" class="zh" font-size="20" font-weight="700" fill="#21302a">API 配置</text>
+  <rect x="540" y="204" width="88" height="38" rx="19" fill="#fff0d7"/>
+  <text x="584" y="229" class="zh" font-size="17" font-weight="700" text-anchor="middle" fill="#9b681b">未配置</text>
+  <text x="88" y="268" class="zh" font-size="18" fill="#62736c">请在网页设置中填写 API Key、地址和模型。</text>
+  <rect x="88" y="310" width="544" height="68" rx="13" fill="#eef6f2" stroke="#b8d2c8" stroke-width="2"/>
+  <text x="360" y="353" class="zh" font-size="20" font-weight="700" text-anchor="middle" fill="#08765b">打开配置</text>
+
+  <rect x="66" y="438" width="588" height="104" rx="21" fill="#fff" stroke="#cbdcd5" stroke-width="2"/>
+  <text x="88" y="483" class="zh" font-size="21" font-weight="700" fill="#17231e">准备就绪</text>
+  <rect x="88" y="508" width="544" height="9" rx="5" fill="#e2ece8"/>
+
+  <rect x="66" y="572" width="280" height="76" rx="14" fill="#8cbdaf"/>
+  <text x="206" y="618" class="zh" font-size="21" font-weight="700" text-anchor="middle" fill="#fff">翻译当前页面</text>
+  <rect x="374" y="572" width="280" height="76" rx="14" fill="#faecea"/>
+  <text x="514" y="618" class="zh" font-size="21" font-weight="700" text-anchor="middle" fill="#cf8e87">停止</text>
+
+  <rect x="66" y="670" width="588" height="74" rx="14" fill="#f8fbf9" stroke="#c8dad3" stroke-width="2"/>
+  <text x="360" y="716" class="zh" font-size="21" text-anchor="middle" fill="#26352f">恢复页面原文</text>
+
+  <text x="360" y="798" class="zh" font-size="17" text-anchor="middle" fill="#7b8984">API Key 仅保存在本机浏览器</text>
+</svg>

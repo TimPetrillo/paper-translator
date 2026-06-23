@@ -6,10 +6,23 @@ import type { RuntimeMessage, TranslationStatus } from '../types/messages';
 import { isAbortError, toErrorMessage } from '../utils/errors';
 import { sendRuntimeMessage } from '../utils/runtime';
 import { DomTranslationRenderer } from './domRenderer';
-import { extractVisibleEnglishTextNodes } from './extractor';
+import {
+  extractVisibleEnglishTextNodes,
+  groupTextNodesIntoBilingualBlocks,
+  type ProtectedInlineSegment,
+} from './extractor';
+
+type TranslationTarget =
+  | { kind: 'replacement'; node: Text; text: string }
+  | {
+      kind: 'bilingual';
+      element: HTMLElement;
+      text: string;
+      protectedSegments: ProtectedInlineSegment[];
+    };
 
 interface TranslationRecord {
-  node: Text;
+  target: TranslationTarget;
   chunks: string[];
   translated: string[];
   remaining: number;
@@ -57,11 +70,22 @@ export class TranslationCoordinator {
       if (nodes.length === 0) throw new Error('未找到可翻译的英文论文正文。');
 
       const maxLength = getChunkLimit(options.translationMode);
-      const records: TranslationRecord[] = nodes
-        .map((node) => {
-          const chunks = splitText(node.data, maxLength);
+      const targets: TranslationTarget[] =
+        options.displayMode === 'bilingual'
+          ? groupTextNodesIntoBilingualBlocks(nodes).map(
+              ({ element, text, protectedSegments }) => ({
+                kind: 'bilingual',
+                element,
+                text,
+                protectedSegments,
+              }),
+            )
+          : nodes.map((node) => ({ kind: 'replacement', node, text: node.data }));
+      const records: TranslationRecord[] = targets
+        .map((target) => {
+          const chunks = splitText(target.text, maxLength);
           return {
-            node,
+            target,
             chunks,
             translated: Array.from({ length: chunks.length }, () => ''),
             remaining: chunks.length,
@@ -109,7 +133,16 @@ export class TranslationCoordinator {
           record.remaining -= 1;
           if (result.succeeded) record.successCount += 1;
           if (record.remaining === 0 && record.successCount > 0) {
-            this.renderer.apply(record.node, record.translated.join(' '), options.displayMode);
+            const translated = record.translated.join(' ');
+            if (record.target.kind === 'bilingual') {
+              this.renderer.applyBilingualBlock(
+                record.target.element,
+                translated,
+                record.target.protectedSegments,
+              );
+            } else {
+              this.renderer.applyReplacement(record.target.node, translated);
+            }
           }
         },
         onProgress: (completed, total) => {

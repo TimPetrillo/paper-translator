@@ -1,11 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import { getSettings, saveSettings } from '../storage/settings';
-import { DEFAULT_SETTINGS, type ExtensionSettings } from '../types/config';
+import { getSettings } from '../storage/settings';
+import {
+  API_PROTOCOL_LABELS,
+  DEFAULT_SETTINGS,
+  DISPLAY_LABELS,
+  MODE_LABELS,
+  type ExtensionSettings,
+} from '../types/config';
 import { isRuntimeMessage, type TranslationStatus } from '../types/messages';
 import { toErrorMessage } from '../utils/errors';
-import { getActiveTabId, sendRuntimeMessage, sendTabMessage } from '../utils/runtime';
-import { SettingsForm } from './SettingsForm';
+import { getActiveTabId, sendTabMessage } from '../utils/runtime';
 
 const INITIAL_STATUS: TranslationStatus = {
   phase: 'idle',
@@ -16,9 +21,9 @@ const INITIAL_STATUS: TranslationStatus = {
 };
 
 function validate(settings: ExtensionSettings): void {
-  if (!settings.apiKey.trim()) throw new Error('请填写 API Key。');
-  if (!settings.baseUrl.trim()) throw new Error('请填写 Base URL。');
-  if (!settings.model.trim()) throw new Error('请填写 Model Name。');
+  if (!settings.apiKey.trim() || !settings.baseUrl.trim() || !settings.model.trim()) {
+    throw new Error('请先打开网页版设置并完成 API 配置。');
+  }
 }
 
 export function App() {
@@ -52,6 +57,7 @@ export function App() {
     [status.completed, status.total],
   );
   const translating = status.phase === 'extracting' || status.phase === 'translating';
+  const configured = Boolean(settings.apiKey && settings.baseUrl && settings.model);
 
   const run = async (action: () => Promise<void>): Promise<void> => {
     setBusy(true);
@@ -66,23 +72,9 @@ export function App() {
     }
   };
 
-  const handleSave = (): Promise<void> =>
-    run(async () => {
-      await saveSettings(settings);
-      setNotice('配置已保存在本机浏览器中。');
-    });
-
-  const handleTest = (): Promise<void> =>
-    run(async () => {
-      validate(settings);
-      const result = await sendRuntimeMessage<string>({ type: 'TEST_API', settings });
-      setNotice(`连接成功：${result}`);
-    });
-
   const handleTranslate = (): Promise<void> =>
     run(async () => {
       validate(settings);
-      await saveSettings(settings);
       const tabId = await getActiveTabId();
       const next = await sendTabMessage<TranslationStatus>(tabId, {
         type: 'START_TRANSLATION',
@@ -118,11 +110,36 @@ export function App() {
         </div>
         <div>
           <h1>Paper Translator</h1>
-          <p>专注英文学术论文的中文翻译</p>
+          <p>论文翻译控制面板</p>
         </div>
       </header>
 
-      <SettingsForm settings={settings} onChange={setSettings} compact />
+      <section className="config-card">
+        <div className="config-card__header">
+          <span>API 配置</span>
+          <span
+            className={`config-badge ${configured ? 'config-badge--ok' : 'config-badge--warn'}`}
+          >
+            {configured ? '已配置' : '未配置'}
+          </span>
+        </div>
+        {configured ? (
+          <>
+            <strong className="model-name">{settings.model}</strong>
+            <p>
+              {API_PROTOCOL_LABELS[settings.apiProtocol]}
+              <br />
+              {MODE_LABELS[settings.translationMode]} · {DISPLAY_LABELS[settings.displayMode]} ·
+              并发 {settings.concurrency}
+            </p>
+          </>
+        ) : (
+          <p>请先在网页版设置中填写 API Key、地址和模型。</p>
+        )}
+        <button className="settings-link" onClick={() => void chrome.runtime.openOptionsPage()}>
+          打开配置
+        </button>
+      </section>
 
       <section className={`status-card status-card--${status.phase}`} aria-live="polite">
         <div className="status-row">
@@ -141,7 +158,7 @@ export function App() {
       <div className="primary-actions">
         <button
           className="button button--primary"
-          disabled={busy || translating}
+          disabled={busy || translating || !configured}
           onClick={handleTranslate}
         >
           翻译当前页面
@@ -151,27 +168,18 @@ export function App() {
           disabled={busy || !translating}
           onClick={handleStop}
         >
-          停止翻译
+          停止
         </button>
       </div>
-      <div className="secondary-actions">
-        <button className="button button--secondary" disabled={busy} onClick={handleSave}>
-          保存配置
-        </button>
-        <button className="button button--secondary" disabled={busy} onClick={handleTest}>
-          测试 API
-        </button>
-        <button className="button button--ghost" disabled={busy} onClick={handleRestore}>
-          恢复原文
-        </button>
-      </div>
+      <button
+        className="button button--ghost restore-button"
+        disabled={busy}
+        onClick={handleRestore}
+      >
+        恢复页面原文
+      </button>
 
-      <footer>
-        <span>API Key 仅保存在本机</span>
-        <button className="link-button" onClick={() => void chrome.runtime.openOptionsPage()}>
-          高级设置
-        </button>
-      </footer>
+      <footer>API Key 仅保存在本机浏览器</footer>
     </main>
   );
 }
